@@ -14,9 +14,9 @@ public class Employee
 	@SuppressWarnings("unused")
 	private int age;
 	boolean setSuccess=false;
-	public int getId() //getter method restricts direct access
+	public int getId() 
 	{
-		return this.id; //current object id
+		return this.id; 
 	}
 	public String getName() 
 	{
@@ -42,7 +42,7 @@ public class Employee
 	{
 		return gender.toUpperCase();
 	}
-	public boolean setID(int id) //setter method prevent  data mis-handling
+	public boolean setID(int id)
 	{
 		if(id>0)
 		{
@@ -56,7 +56,7 @@ public class Employee
 		}
 	}
 
-	public void setName(String name) //setter method prevent  data mis-handling
+	public void setName(String name)
 	{
 		this.name=name;
 	}
