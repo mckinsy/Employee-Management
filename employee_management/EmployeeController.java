@@ -1,14 +1,11 @@
-//tip1- using static everywhere is not a good practice it consumes unnecessary memory
-//tip2 - Scanner should always open at class global level and closed at the end of main method termination
 package employee_management;
 
 import java.util.*;
-//import java.util.Date;
 import java.sql.*;
 
 public class EmployeeController
 {
-	ArrayList<Employee> employee;//dynamic size default initial size is 10 also it is global(only within same class) static variable called as instance variable as array
+	ArrayList<Employee> employee;
 	boolean root;
 	Scanner sc;
 
@@ -21,7 +18,7 @@ public class EmployeeController
 			e1.printStackTrace();
 		}
 		sc=new Scanner(System.in);
-		boolean flag= "1".equals(user_name) && "1".equals(password);//true
+		boolean flag= "1".equals(user_name) && "1".equals(password);
 		if(flag)
 			System.out.print("\n\tUser Authentication Successful!   Hello : ");System.out.println(user_name+"\n");
 			if(!flag)
@@ -32,13 +29,13 @@ public class EmployeeController
 			}
 			if(root||flag)
 			{
-				while(true) // for(i=0;;i++) for(i=0;true;i--) we can use this also start from any initial value other than 0
+				while(true) 
 				{
 					System.out.println(" 1. Insert an Employee \n 2. Display employee \n 3. Delete an Employee \n 4. Modify an Employee \n 0. EXIT \n");
 					System.out.print(" Press Any key for action to perform : ");
 					try
 					{
-						String option = sc.next();//int option =new Scanner(System.in).nextInt();
+						String option = sc.next();
 						switch(option)
 						{
 
@@ -105,17 +102,17 @@ public class EmployeeController
 							sc.close();
 							Employee_JDBC_Operations.updateToDatabase(employee);
 							System.exit(0);
-							break;            //this works because scanner eventually closes at the end of main method
+							break;            
 
 						default:
 							System.err.println("\n Sorry! BAD input \n \n Retry\n");
-							break;  //break after default is optional
+							break;  
 						}
 					}
 
 					catch(Exception e)
 					{
-						System.err.println(e);//e.printStackTrace();
+						System.err.println(e);
 						sc.close();
 						Employee_JDBC_Operations.closeConnection();
 						System.exit(0);
@@ -125,11 +122,11 @@ public class EmployeeController
 			}
 			else return; 
 	}
-	public boolean chk_unique(int id)  //system.in is static if so many objects of scanner class is created in diffrent places and even if one is closed anywhere system.in is closed for all and it will throw java.util.nosuchelement exception
+	public boolean chk_unique(int id)  
 	{
 		for(Employee x: employee)
 		{
-			//if(employee.contains(x.getid())) --> using this gives warning
+			
 			if(x.getId()==id && id>0) 
 			{
 				System.err.println("\nEnter correct ID this Id's existing one or inappropriate \n");
@@ -155,9 +152,6 @@ public class EmployeeController
 					employee.remove(x);
 
 				else return;
-				//				x.setAddress(null);
-				//				x.setDOB(null);x.setGender(null);
-				//				x.forceSetIDZero();x.setName(null);
 				System.out.println("Deletion Success! \n");
 				deletionSuccess=true;
 				break;
@@ -180,7 +174,7 @@ public class EmployeeController
 			{
 				System.out.println("ID Found, Employee "+x.getName());
 				System.out.print("Modify ID? y/n : ");
-				//sc.nextLine(); //here it is necessary to write why?
+				
 				String option0 = sc.nextLine().toLowerCase();
 				if("y".equals(option0))
 				{
@@ -188,8 +182,8 @@ public class EmployeeController
 					x.setID(sc.nextInt());
 				}
 				System.out.print("Modify name? y/n : ");
-				String option1 = sc.nextLine().toLowerCase(); //new technique to be noted
-				if("y".equals(option1)) //using == does not work for string why??
+				String option1 = sc.nextLine().toLowerCase(); 
+				if("y".equals(option1)) 
 				{
 					System.out.print("Enter New Name - ");
 					x.setName(sc.nextLine());
@@ -202,7 +196,7 @@ public class EmployeeController
 					x.setGender(sc.nextLine());
 				}
 				System.out.print("Modify DOB? y/n : ");
-				//sc.nextLine(); when this occurs when not is a big confusion
+				
 				String option3 = sc.nextLine().toLowerCase();
 				if("y".equals(option3))
 				{
@@ -216,7 +210,7 @@ public class EmployeeController
 				System.out.print("Modify Address? y/n : ");
 				//sc.nextLine();
 				String option4 = sc.nextLine().toLowerCase();
-				if("y".equals(option4))  //either do equals ignore case or convert to lower case then check
+				if("y".equals(option4))  
 				{
 					System.out.print("Enter New Address - ");
 					x.setAddress(sc.nextLine());
@@ -228,20 +222,19 @@ public class EmployeeController
 		}
 		if(!modificationSuccess)
 			System.err.println("Bad ID! No Employee of ID as Such Exist \n");
-		//sc.close();
 	}
 
 
 	public void addEmployee() 
 	{
 		sc=new Scanner(System.in);
-		Employee emp =new Employee(); // each call of this method creates new employee object making this statement global is a big mistake bcoz each time we want new employee to be added
+		Employee emp =new Employee(); 
 		System.out.print("\n \t\t : Adding an employee : \n \nEnter Employee ID : ");
-		int eid=sc.nextInt(); //risky code handled in menu
-		if(chk_unique(eid)&& emp.setID(eid)) //calling static member of another class
+		int eid=sc.nextInt(); 
+		if(chk_unique(eid)&& emp.setID(eid))
 		{
 			System.out.print("\nEnter Name of Employee : ");
-			sc.nextLine(); //to differentiate behavior after nextint and before nextline this is just to convey jvm that after integer string is a input
+			sc.nextLine(); 
 			String ename=sc.nextLine();
 			emp.setName(ename); 
 			while(!emp.setSuccess)
@@ -257,7 +250,7 @@ public class EmployeeController
 			System.out.print("Enter Address : ");
 			String add=sc.nextLine();
 			emp.setAddress(add);
-			employee.add(emp); //array list updated
+			employee.add(emp);
 			System.out.println();
 			System.out.println("Success! Adding an Employee \n");
 		}
@@ -295,33 +288,3 @@ public class EmployeeController
 		sc.close();
 	}
 }
-
-
-
-//	private static int size; //global(only within same class) static variable called as instance variable
-//
-//	/*public static void setObject(int size) //size is also a local variable but no error because instance variable is not used along with local variable inside this method if used then due to variable shadowing we must use this keyword to differentiate between instance variable and local variable 
-//	  {
-//		  ArrayList<Object> al=new ArrayList<Object>(); //dynamic size
-//		  for(int i=0;i<size;i++)
-//		  {
-//		  	EmployeeController emp = new EmployeeController();
-//		  	al.add(emp);
-//		  }
-//		  emp.get.menu();
-//	  }//static method to use inside static main method without making object because this method is responsible to make object of each employee
-//	 */
-//	public EmployeeController()
-//	{
-//		this.id=setid();
-//		this.name=name;
-//		this.dob=dob;
-//		this.address=address;
-//		this.gender=gender;
-//	}
-//	public String toString()
-//	{
-//		return  this.id+"\n"+ this.name+"\n"+this.dob+"\n"+this.address+"\n"+this.gender+"\n"+this.age;
-//	}
-//		  int size=12;
-//		  EmployeeController employee[] = new EmployeeController[size1]; //non dynamic logic
