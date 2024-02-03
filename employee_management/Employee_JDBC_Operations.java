@@ -37,14 +37,13 @@ public class Employee_JDBC_Operations
 
 		boilerPlate();
 
-		rs=pstmt.executeQuery(str);//"alter table employee drop column age");  
+		rs=pstmt.executeQuery(str);
 		while(rs.next())
 		{
 			Employee employee=new Employee();
 			employee.setID(rs.getInt(1));
 			employee.setName(rs.getString(2));
 			employee.setDOB(rs.getDate(3));
-			//employee.setAge(rs.getInt(4));
 			employee.setGender(rs.getString(4));
 			employee.setAddress(rs.getString(5));
 			data.add(employee);
@@ -81,18 +80,15 @@ public class Employee_JDBC_Operations
 	public static void updateToDatabase(ArrayList<Employee> employee) throws ParseException
 	{
 		try {
-			pstmt.execute("truncate table employee"); //boolean return type for dql true for other than dql false
-			//pstmt.execute("alter table employee drop column age");
-
+			pstmt.execute("truncate table employee");
 			for(Employee element:employee)
 			{
 				pstmt.setInt(1,element.getId());
 				pstmt.setString(2,element.getName());
-				pstmt.setDate(3,(Date) element.getDob(0));//(Date) new SimpleDateFormat().parse(element.getDob()));
-				//pstmt.setInt(4,element.getAge());
+				pstmt.setDate(3,(Date) element.getDob(0));
 				pstmt.setString(4,element.getGender());
 				pstmt.setString(5,element.getAddress());
-				pstmt.executeUpdate(); //Execution for DML
+				pstmt.executeUpdate();
 			}
 		} catch (SQLException e) {
 			System.out.println("here");
@@ -102,9 +98,6 @@ public class Employee_JDBC_Operations
 		{
 			closeConnection();
 		}
-
-		//String str="create table Employee(id number(4) primary key, ename varchar2(10) not null, dob date not null, age number(2) check(age between 21 and 59), gender varchar2(6) not null check(gender in('MALE','FEMALE')), address varchar2(100) not null)";
-		//id,name,dob,age,gender,address
 	}
 
 }
