@@ -1,3 +1,11 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+ 
+<%@page language="java"
+import ="java.util.*"
+import ="com.empcontroller.*"
+import ="com.empmodule.*" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,6 +15,7 @@
 * {
 	margin: 0;
 	padding: 0;
+	outline:none;
 }
 
 .parent {
@@ -71,11 +80,6 @@ body
 	align-items: flex-start;
 }
 
-/*.skillData
-{
-	display:none;
-}*/
-
 #dept {
 	width: 40%;
 	padding: 4px;
@@ -108,8 +112,19 @@ body
 }
 
 #button:hover {
-	transform: translateY(-10px) scaleY(1.1);
+	/*transform: translateY(-10px) scaleY(1.1);*/
 	box-shadow: 0px 0px 20px darkolivegreen;
+}
+
+.edit
+{
+	color:white ; 
+	text-decoration:none;
+}
+
+.edit:hover
+{
+	text-shadow: 0px 0px 10px black;
 }
 
 #table
@@ -117,7 +132,7 @@ body
 	width:100%;
 	text-align:center;
 	color:white;
-	background:linear-gradient(to right,blue,purple,blue,purple,red);
+	background:linear-gradient(to right,blue,purple,blue,purple);
 }
 </style>
 
@@ -133,25 +148,36 @@ let address = document.querySelector('#address')   //one value
 let gender = document.querySelectorAll('.ip1') // value > 1
 let skills = document.querySelectorAll('.ip2') // value > 1
 let update = document.querySelectorAll('.tdata') // value > 1
-let updateSkill = document.querySelectorAll('.skillData') // value > 1
+let updateSkill = document.querySelector('#skillData') // value > 1
 let department = document.querySelector('#dept') // value > 1
+let skill = document.querySelector('#skillset')
+
+let flag = true;
+
+let table = document.querySelector('#table')
+
+let s=[];
+
+let notEmpty=0;
 
 if(Fname.value=="")
 	{
 	  style[0].style.border='1px solid red'
-	  //return
+	  flag=false;
+	  return
 	}
-else style[0].style.border='1px solid black'
+else {style[0].style.border='1px solid black'; flag=true;}
 
 update[0].innerText=Fname.value
 update[1].innerText=Lname.value
 
-if(phno.value<9**10||phno.value>10**9 || phno.value=="")
+if(phno.value=="")
 	{
 		phno.style.border='1px solid red'
-		//return
+		flag=false
+		return
 	}
-else phno.style.border='1px solid black'
+else {phno.style.border='1px solid black'; flag = true;}
 	
 update[2].innerText=phno.value
 
@@ -160,21 +186,65 @@ for(let i=0;i<gender.length;i++)
 	if(gender[i].checked)
 		update[3].innerText=gender[i].value
 	}
-for(let i=0;i<updateSkill.length;i++)
+	
+for(let i=0;i<5;i++)
 {
-	if(skills[i].checked)
-		updateSkill[i].innerText=skills[i].value
-	else updateSkill[i].innerText='null'
+	if(skills[i].checked) {notEmpty++;s.push(skills[i].value)}
 }
 
+if(notEmpty==0) { document.getElementById('skll').style.color='red'; flag =false;}
+
+else {
+		document.getElementById('skll').style.color='black'; 
+		skill.value = s.join(",")
+		updateSkill.innerText=skill.value
+		flag=true
+	 }
+
 if(address.value=="")
+	{
 	address.style.boxShadow = '0px 0px 3px red'
+	flag=false;
+	}
+	else address.style.boxShadow = '0px 0px 3px darkgreen'
 	
 update[4].innerText=document.querySelector('#dob').value
 update[5].innerText=department.value
+update[6].innerText=address.value
+
+/*if(flag)
+	{
+	  let form = document.querySelector('#userData')
+	  form.submit();
+	}*/
+
 }
 
-
+function addEmployee()
+{
+	let row = table.insertRow();
+	let cell1 = row.insertCell();
+	let cell2 = row.insertCell();
+	let cell3 = row.insertCell();
+	let cell4 = row.insertCell();
+	let cell5 = row.insertCell();
+	let cell6 = row.insertCell();
+	let cell7 = row.insertCell();
+	let cell8 = row.insertCell();
+	let cell9 = row.insertCell();
+	let cell10 = row.insertCell();
+	cell1.innerHTML = "";
+	cell2.innerHTML = "<td class=\"tdata\"></td>";
+	cell3.innerHTML = "<td class=\"tdata\"></td>";
+	cell4.innerHTML = "<td class=\"tdata\"></td>";
+	cell5.innerHTML = "<td class=\"tdata\"></td>";
+	cell6.innerHTML = "<td id=\"skillData\"></td>";
+	cell7.innerHTML = "<td class=\"tdata\"></td>";
+	cell8.innerHTML = "<td class=\"tdata\"></td>";
+	cell9.innerHTML = "<td class=\"tdata\"></td>";
+	cell10.innerHTML = "<a href=\"#\" class=\"edit\">Edit</a>"
+	
+}
 
 </script>
 
@@ -183,19 +253,19 @@ update[5].innerText=department.value
 	<div class="parent">
 		<div class="child">
 
-			<form action="Servlet" method="post">
+			<form id="userData" onSubmit="" action="send" method="post">
 			<div class=name>
 				<label class="labeL1">First Name*
-				<input id="Fname" class="box" name="fname" type="text" placeholder="First name" required>
+				<input onChange='display()' id="Fname" class="box" name="fname" type="text" placeholder="First name" required>
 				</label> 
 				<label class="labeL1">Last Name
-				<input id="Lname" class="box" name="lname" type="text" placeholder="(optional)">
+				<input onChange='display()' id="Lname" class="box" name="lname" type="text" placeholder="(optional)">
 				</label>
 			</div>
 
 			<div class="inp">
 				<label>Phone number*</label> 
-				<input id="phno" name="phn" class="box" type="number" placeholder="phone number"  maxlength="10" required>
+				<input onChange='display()' id="phno" name="phn" class="box" type="tel" pattern="[9]{1}[0-9]{9}" placeholder="phone number"  required>
 			</div>
 
 			<div class="inp1">
@@ -205,34 +275,35 @@ update[5].innerText=department.value
 			</div>
 
 			<div class="inp">
-				<label class="label2">Skills*</label> 
-				<input class="ip2" type="checkbox" value="HTML">HTML
-				<input class="ip2" type="checkbox" value="CSS">CSS
-				<input class="ip2" type="checkbox" value="JavaScript">JavaScript 
-				<input class="ip2" type="checkbox" value="MySql">MySQL
-				<input class="ip2" type="checkbox" value="Java">Java
+				<label id="skll" class="label2">Skills*</label> 
+				<input onChange="display()" class="ip2" type="checkbox" value="HTML">HTML
+				<input onChange="display()" class="ip2" type="checkbox" value="CSS">CSS
+				<input onChange="display()" class="ip2" type="checkbox" value="JS">JavaScript 
+				<input onChange="display()" class="ip2" type="checkbox" value="MySql">MySQL
+				<input onChange="display()" class="ip2" type="checkbox" value="Java">Java
+				<input id="skillset" name="skill" type="hidden" value="">
 			</div>
 
 			<div class="inp">
 				<label class="label2">DOB*</label> 
-				<input id="dob" type="date" required value="2024-02-11">
+				<input id="dob" type="date" required name="dob" value="1990-07-21">
 			</div>
 
 			<div class="inp">
 				<label class="label2">Department*</label> 
-				<select name="department" id="dept">
-					<option value="Computer Science">Computer Science</option>
-					<option value="Information Tech">Information Technology</option>
-					<option value="Electronics Comm">Electronics communication</option>
-					<option value="Electrical Eng">Electrical Engineering</option>
-					<option value="Mechanical Eng">Mechanical Engineering</option>
+				<select onChange='display()' name="department" id="dept">
+					<option value="CS">Computer Science</option>
+					<option value="IT">Information Technology</option>
+					<option value="EC">Electronics communication</option>
+					<option value="EE">Electrical Engineering</option>
+					<option value="ME">Mechanical Engineering</option>
 				</select>
 			</div>
 
 			<div class="inp">
 				<div class="add">
 					<label class="label2">Address*</label>
-					<textarea required placeholder="Address" name="Address" id="address"></textarea>
+					<textarea onChange='display()' required placeholder="Address" name="Address" id="address"></textarea>
 				</div>
 			</div>
  
@@ -248,35 +319,57 @@ update[5].innerText=department.value
     <!-- <tr bgcolor="grey"> this removes boundary b/w two columns make them common colour -->
     <tr>
 
+    <th bgcolor="grey">Id</th>
     <th bgcolor="grey">First Name</th>
     <th bgcolor="grey">Last Name</th>
     <th bgcolor="grey">Phone Number</th>
     <th bgcolor="grey">Gender</th>
-    <th bgcolor="grey" colspan="5">Skills</th>
+    <!--  th bgcolor="grey" colspan="5">Skills</th>-->
+    <th bgcolor="grey">Skills</th>
     <th bgcolor="grey">DOB</th>
     <th bgcolor="grey">Department</th>
     <th bgcolor="grey">Address</th>
+    <th bgcolor="grey">Action</th>
 
     </tr>
-
-    <tr>
-
-    <td class="tdata">A</td>
-    <td class="tdata">A</td>
-    <td class="tdata">A</td>
-    <td class="tdata">A</td>
-    <td class="skillData">NULL</td>
-    <td class="skillData">NULL</td>
-    <td class="skillData">NULL</td>
-    <td class="skillData">NULL</td>
-    <td class="skillData">NULL</td>
-    <td class="tdata">A</td>
-    <td class="tdata">A</td>
-    <td class="tdata">A</td>
-
-
-    </tr>
-
+    
+     <% ArrayList<Employee> emp = (ArrayList<Employee>)request.getAttribute("data");
+	   if(emp!=null)
+	   {
+		for(Employee s:emp)
+		{
+		if (s != null)
+		{
+	   System.out.println(s);
+        %> 
+            <tr> 
+                <td><%=s.getId()%></td> 
+                <td><%=s.getName()%></td> 
+                <td><%=s.getLname()%></td> 
+                <td><%=s.getPh()%></td> 
+                <td><%=s.getGender()%></td> 
+                <td><%=s.getSkills()%></td> 
+                <td><%=s.getDob()%></td>
+                <td><%=s.getDepartment()%></td> 
+                <td><%=s.getAddress()%></td> 
+                <td><a class="edit" href="">Edit</a></td>
+            </tr> 
+		<%}
+		}
+		}
+        %>
+        
+        <tr style='display:none;'> 
+                <td id="empID"></td> 
+                <td class="tdata"></td> 
+                <td class="tdata"></td> 
+                <td class="tdata"></td> 
+                <td class="tdata"></td> 
+                <td id="skillData"></td> 
+                <td class="tdata"></td>
+                <td class="tdata"></td> 
+                <td class="tdata"></td> 
+            </tr> 
 </table>
 </body>
 </html>
